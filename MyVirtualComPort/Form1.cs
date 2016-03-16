@@ -731,6 +731,34 @@ namespace MyVirtualComPort
             }
           }
         }
+        if (textBoxIfRead11.Text != "")
+        {
+          if (textBoxIfRead11.Text == read)
+          {
+            string x = textBoxIfSend11.Text;
+            x = x.Replace("\n", Environment.NewLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
+            if (checkBoxAddNewline11.Checked)
+            {
+              serialPort1.Write(x + Environment.NewLine);
+              if (checkBoxSendTwice11.Checked)
+              {
+                System.Threading.Thread.Sleep(mysleeptime);
+                serialPort1.Write(x + Environment.NewLine);
+              }
+            }
+            else
+            {
+              serialPort1.Write(x);
+              if (checkBoxSendTwice11.Checked)
+              {
+                System.Threading.Thread.Sleep(mysleeptime);
+                serialPort1.Write(x);
+              }
+            }
+
+            //serialPort1.Write(textBoxIfSend2.Text);
+          }
+        }
 
 
       }
@@ -966,6 +994,12 @@ namespace MyVirtualComPort
     {
       comboBox1.Items.Clear();
       loadPortList();
+    }
+
+    private void textBox22_TextChanged(object sender, EventArgs e)
+    {
+      Properties.Settings.Default.name11 = textBox22.Text;
+      Properties.Settings.Default.Save();
     }
   }
 }
