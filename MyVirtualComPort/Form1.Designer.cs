@@ -161,12 +161,21 @@
       this.groupBox1 = new System.Windows.Forms.GroupBox();
       this.button15 = new System.Windows.Forms.Button();
       this.comboBox1 = new System.Windows.Forms.ComboBox();
+      this.groupBox2 = new System.Windows.Forms.GroupBox();
+      this.textBox24 = new System.Windows.Forms.TextBox();
+      this.checkBox2 = new System.Windows.Forms.CheckBox();
+      this.textBox23 = new System.Windows.Forms.TextBox();
+      this.checkBox1 = new System.Windows.Forms.CheckBox();
+      this.buttonTimerOff = new System.Windows.Forms.Button();
+      this.buttonTimerOn = new System.Windows.Forms.Button();
+      this.timerForDynamicVariables = new System.Windows.Forms.Timer(this.components);
       ((System.ComponentModel.ISupportInitialize)(this.trackBar1)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.trackBar2)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.trackBar3)).BeginInit();
       ((System.ComponentModel.ISupportInitialize)(this.trackBar4)).BeginInit();
       this.panel1.SuspendLayout();
       this.groupBox1.SuspendLayout();
+      this.groupBox2.SuspendLayout();
       this.SuspendLayout();
       // 
       // textBox1
@@ -1371,6 +1380,7 @@
       this.checkBoxSendTwice11.TabIndex = 128;
       this.checkBoxSendTwice11.Text = "send twice";
       this.checkBoxSendTwice11.UseVisualStyleBackColor = true;
+      this.checkBoxSendTwice11.CheckedChanged += new System.EventHandler(this.checkBoxSendTwice11_CheckedChanged);
       // 
       // checkBoxAddNewline11
       // 
@@ -1454,12 +1464,88 @@
       this.comboBox1.TabIndex = 1;
       this.comboBox1.SelectedIndexChanged += new System.EventHandler(this.comboBox1_SelectedIndexChanged);
       // 
+      // groupBox2
+      // 
+      this.groupBox2.Controls.Add(this.textBox24);
+      this.groupBox2.Controls.Add(this.checkBox2);
+      this.groupBox2.Controls.Add(this.textBox23);
+      this.groupBox2.Controls.Add(this.checkBox1);
+      this.groupBox2.Controls.Add(this.buttonTimerOff);
+      this.groupBox2.Controls.Add(this.buttonTimerOn);
+      this.groupBox2.Location = new System.Drawing.Point(1287, 37);
+      this.groupBox2.Name = "groupBox2";
+      this.groupBox2.Size = new System.Drawing.Size(154, 634);
+      this.groupBox2.TabIndex = 131;
+      this.groupBox2.TabStop = false;
+      this.groupBox2.Text = "Timer:";
+      // 
+      // textBox24
+      // 
+      this.textBox24.Location = new System.Drawing.Point(64, 172);
+      this.textBox24.Name = "textBox24";
+      this.textBox24.Size = new System.Drawing.Size(59, 26);
+      this.textBox24.TabIndex = 134;
+      this.textBox24.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+      // 
+      // checkBox2
+      // 
+      this.checkBox2.AutoSize = true;
+      this.checkBox2.Location = new System.Drawing.Point(15, 176);
+      this.checkBox2.Name = "checkBox2";
+      this.checkBox2.Size = new System.Drawing.Size(22, 21);
+      this.checkBox2.TabIndex = 133;
+      this.checkBox2.UseVisualStyleBackColor = true;
+      // 
+      // textBox23
+      // 
+      this.textBox23.Location = new System.Drawing.Point(64, 454);
+      this.textBox23.Name = "textBox23";
+      this.textBox23.Size = new System.Drawing.Size(59, 26);
+      this.textBox23.TabIndex = 132;
+      this.textBox23.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+      // 
+      // checkBox1
+      // 
+      this.checkBox1.AutoSize = true;
+      this.checkBox1.Location = new System.Drawing.Point(15, 458);
+      this.checkBox1.Name = "checkBox1";
+      this.checkBox1.Size = new System.Drawing.Size(22, 21);
+      this.checkBox1.TabIndex = 2;
+      this.checkBox1.UseVisualStyleBackColor = true;
+      this.checkBox1.CheckedChanged += new System.EventHandler(this.checkBox1_CheckedChanged);
+      // 
+      // buttonTimerOff
+      // 
+      this.buttonTimerOff.Location = new System.Drawing.Point(80, 44);
+      this.buttonTimerOff.Name = "buttonTimerOff";
+      this.buttonTimerOff.Size = new System.Drawing.Size(59, 32);
+      this.buttonTimerOff.TabIndex = 1;
+      this.buttonTimerOff.Text = "Off";
+      this.buttonTimerOff.UseVisualStyleBackColor = true;
+      this.buttonTimerOff.Click += new System.EventHandler(this.buttonTimerOff_Click);
+      // 
+      // buttonTimerOn
+      // 
+      this.buttonTimerOn.Location = new System.Drawing.Point(15, 44);
+      this.buttonTimerOn.Name = "buttonTimerOn";
+      this.buttonTimerOn.Size = new System.Drawing.Size(59, 32);
+      this.buttonTimerOn.TabIndex = 0;
+      this.buttonTimerOn.Text = "ON";
+      this.buttonTimerOn.UseVisualStyleBackColor = true;
+      this.buttonTimerOn.Click += new System.EventHandler(this.buttonTimerOn_Click);
+      // 
+      // timerForDynamicVariables
+      // 
+      this.timerForDynamicVariables.Interval = 300;
+      this.timerForDynamicVariables.Tick += new System.EventHandler(this.timerForDynamicVariables_Tick);
+      // 
       // Form1
       // 
       this.AutoScaleDimensions = new System.Drawing.SizeF(9F, 20F);
       this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
       this.AutoSize = true;
-      this.ClientSize = new System.Drawing.Size(1284, 985);
+      this.ClientSize = new System.Drawing.Size(1470, 985);
+      this.Controls.Add(this.groupBox2);
       this.Controls.Add(this.groupBox1);
       this.Controls.Add(this.textBox22);
       this.Controls.Add(this.checkBoxSendTwice11);
@@ -1596,6 +1682,8 @@
       this.panel1.ResumeLayout(false);
       this.panel1.PerformLayout();
       this.groupBox1.ResumeLayout(false);
+      this.groupBox2.ResumeLayout(false);
+      this.groupBox2.PerformLayout();
       this.ResumeLayout(false);
       this.PerformLayout();
 
@@ -1735,6 +1823,14 @@
     private System.Windows.Forms.GroupBox groupBox1;
     private System.Windows.Forms.Button button15;
     private System.Windows.Forms.ComboBox comboBox1;
+    private System.Windows.Forms.GroupBox groupBox2;
+    private System.Windows.Forms.TextBox textBox23;
+    private System.Windows.Forms.CheckBox checkBox1;
+    private System.Windows.Forms.Button buttonTimerOff;
+    private System.Windows.Forms.Button buttonTimerOn;
+    private System.Windows.Forms.Timer timerForDynamicVariables;
+    private System.Windows.Forms.TextBox textBox24;
+    private System.Windows.Forms.CheckBox checkBox2;
   }
 }
 

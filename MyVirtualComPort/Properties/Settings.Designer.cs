@@ -526,5 +526,41 @@ namespace MyVirtualComPort.Properties {
                 this["COMM"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("2000")]
+        public string minSend1 {
+            get {
+                return ((string)(this["minSend1"]));
+            }
+            set {
+                this["minSend1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("60000")]
+        public string maxSend1 {
+            get {
+                return ((string)(this["maxSend1"]));
+            }
+            set {
+                this["maxSend1"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool checkBoxSendTwice11 {
+            get {
+                return ((bool)(this["checkBoxSendTwice11"]));
+            }
+            set {
+                this["checkBoxSendTwice11"] = value;
+            }
+        }
     }
 }

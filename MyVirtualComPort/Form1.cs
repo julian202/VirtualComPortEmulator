@@ -16,6 +16,7 @@ namespace MyVirtualComPort
     string read;
     int mysleeptime;
     delegate void SetTextCallback(string text);
+    string myEndOfLine;   // = "\r";  //Environment.NewLine;
 
     public Form1()
     {
@@ -25,6 +26,13 @@ namespace MyVirtualComPort
 
     private void Form1_Load(object sender, EventArgs e)
     {
+      //trying new end of line
+      Char newLineChar = (char)13;
+      string newLine = (newLineChar.ToString());
+      myEndOfLine = newLine;
+      //
+
+
       loadPortList();
       /*
       try
@@ -35,12 +43,24 @@ namespace MyVirtualComPort
       {
         MessageBox.Show(ex.Message);
       }*/
-     
+
       //textBox5.Text = trackBar1.Minimum.ToString();
       //textBox6.Text = trackBar1.Maximum.ToString();
       //labelComport.Text = serialPort1.PortName;
 
-      textBox21.Text=Properties.Settings.Default.addToTextboxIfSend1;
+
+      if (Properties.Settings.Default.checkBoxSendTwice11)
+      {
+        checkBoxSendTwice11.Checked = true;
+      }
+      else
+      {
+        checkBoxSendTwice11.Checked = false;
+      }
+
+      textBox5.Text = Properties.Settings.Default.minSend1;
+      textBox6.Text = Properties.Settings.Default.maxSend1;
+      textBox21.Text = Properties.Settings.Default.addToTextboxIfSend1;
 
       trackBar1.Maximum = Convert.ToInt32(textBox6.Text);
       trackBar2.Maximum = Convert.ToInt32(textBox3.Text);
@@ -132,6 +152,7 @@ namespace MyVirtualComPort
     }
     private void serialPort1_DataReceived(object sender, System.IO.Ports.SerialDataReceivedEventArgs e)
     {
+      Output("Data Received Event Fired");
       doRoutine();
     }
 
@@ -169,11 +190,15 @@ namespace MyVirtualComPort
     private void textBox5_TextChanged(object sender, EventArgs e)
     {
       trackBar1.Minimum = Convert.ToInt32(textBox5.Text);
+      Properties.Settings.Default.minSend1= textBox5.Text;
+      Properties.Settings.Default.Save();
     }
 
     private void textBox6_TextChanged(object sender, EventArgs e)
     {
       trackBar1.Maximum = Convert.ToInt32(textBox6.Text);
+      Properties.Settings.Default.maxSend1 = textBox6.Text;
+      Properties.Settings.Default.Save();
     }
 
     private void button4_Click(object sender, EventArgs e)
@@ -183,15 +208,15 @@ namespace MyVirtualComPort
     private void clickedSend()
     {
       string x = textBox2.Text;
-      x = x.Replace("\n", Environment.NewLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
+      x = x.Replace("\n", myEndOfLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
       serialPort1.Write(x);
     }
 
     private void button5_Click(object sender, EventArgs e)
     {
       string x = textBox2.Text;
-      x = x.Replace("\n", Environment.NewLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
-      serialPort1.Write(x + Environment.NewLine);
+      x = x.Replace("\n", myEndOfLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
+      serialPort1.Write(x + myEndOfLine);
     }
 
     private void button7_Click(object sender, EventArgs e)
@@ -201,7 +226,7 @@ namespace MyVirtualComPort
 
     private void button6_Click(object sender, EventArgs e)
     {
-      serialPort1.Write(textBoxSend2.Text + Environment.NewLine);
+      serialPort1.Write(textBoxSend2.Text + myEndOfLine);
     }
 
     private void button9_Click(object sender, EventArgs e)
@@ -211,7 +236,7 @@ namespace MyVirtualComPort
 
     private void button8_Click(object sender, EventArgs e)
     {
-      serialPort1.Write(textBoxSend3.Text + Environment.NewLine);
+      serialPort1.Write(textBoxSend3.Text + myEndOfLine);
     }
 
     private void button10_Click(object sender, EventArgs e)
@@ -334,7 +359,7 @@ namespace MyVirtualComPort
 
       if (radioButtonPressureB.Checked)
       {
-        Properties.Settings.Default.radioButtonPressureB=textBoxIfSend5.Text;
+        Properties.Settings.Default.radioButtonPressureB = textBoxIfSend5.Text;
       }
       if (radioButtonPressureA.Checked)
       {
@@ -428,29 +453,41 @@ namespace MyVirtualComPort
       else { this.textBox1.Text = text; }
     }
 
-
+    public void Output(string s)
+    {
+      System.Diagnostics.Debug.WriteLine(s);
+    }
 
     private void doRoutine()
     {
       read = serialPort1.ReadExisting();
       if (read != "")
       {
+        //serialPort1.Write("hello" + myEndOfLine);
+
         //textBox1.Text = read;
-        SetTextbox1(read);
+
+
+       SetTextbox1(read);
 
         if (textBoxIfRead1.Text != "")
         {
           if (textBoxIfRead1.Text == read)
           {
             string x = textBoxIfSend1.Text;
-            x = x.Replace("\n", Environment.NewLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
+            x = x.Replace("\n", myEndOfLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
             if (checkBoxAddNewline.Checked)
             {
-              serialPort1.Write(x + Environment.NewLine);
+              System.Threading.Thread.Sleep(mysleeptime);
+              Output("Sending: " + x);
+              serialPort1.Write(x + myEndOfLine);
+              Output("Sent: " + x);
               if (checkBoxSendTwice.Checked)
               {
                 System.Threading.Thread.Sleep(mysleeptime);
-                serialPort1.Write(x + Environment.NewLine);
+                //Output("Sending: "+ x);
+                serialPort1.Write(x + myEndOfLine);
+                //Output("Sent: " + x);
               }
             }
             else
@@ -466,7 +503,7 @@ namespace MyVirtualComPort
           }
         }
 
-
+       
 
         if (textBoxIfRead2.Text != "")
         {
@@ -474,14 +511,14 @@ namespace MyVirtualComPort
           {
 
             string x = textBoxIfSend2.Text;
-            x = x.Replace("\n", Environment.NewLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
+            x = x.Replace("\n", myEndOfLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
             if (checkBoxAddNewline2.Checked)
             {
-              serialPort1.Write(x + Environment.NewLine);
+              serialPort1.Write(x + myEndOfLine);
               if (checkBoxSendTwice2.Checked)
               {
                 System.Threading.Thread.Sleep(mysleeptime);
-                serialPort1.Write(x + Environment.NewLine);
+                serialPort1.Write(x + myEndOfLine);
               }
             }
             else
@@ -503,14 +540,14 @@ namespace MyVirtualComPort
           {
 
             string x = textBoxIfSend3.Text;
-            x = x.Replace("\n", Environment.NewLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
+            x = x.Replace("\n", myEndOfLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
             if (checkBoxAddNewline3.Checked)
             {
-              serialPort1.Write(x + Environment.NewLine);
+              serialPort1.Write(x + myEndOfLine);
               if (checkBoxSendTwice3.Checked)
               {
                 System.Threading.Thread.Sleep(mysleeptime);
-                serialPort1.Write(x + Environment.NewLine);
+                serialPort1.Write(x + myEndOfLine);
               }
             }
             else
@@ -535,14 +572,14 @@ namespace MyVirtualComPort
           {
 
             string x = textBoxIfSend4.Text;
-            x = x.Replace("\n", Environment.NewLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
+            x = x.Replace("\n", myEndOfLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
             if (checkBoxAddNewline4.Checked)
             {
-              serialPort1.Write(x + Environment.NewLine);
+              serialPort1.Write(x + myEndOfLine);
               if (checkBoxSendTwice4.Checked)
               {
                 System.Threading.Thread.Sleep(mysleeptime);
-                serialPort1.Write(x + Environment.NewLine);
+                serialPort1.Write(x + myEndOfLine);
               }
             }
             else
@@ -566,14 +603,14 @@ namespace MyVirtualComPort
           {
 
             string x = textBoxIfSend5.Text;
-            x = x.Replace("\n", Environment.NewLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
+            x = x.Replace("\n", myEndOfLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
             if (checkBoxAddNewline5.Checked)
             {
-              serialPort1.Write(x + Environment.NewLine);
+              serialPort1.Write(x + myEndOfLine);
               if (checkBoxSendTwice5.Checked)
               {
                 System.Threading.Thread.Sleep(mysleeptime);
-                serialPort1.Write(x + Environment.NewLine);
+                serialPort1.Write(x + myEndOfLine);
               }
             }
             else
@@ -596,14 +633,14 @@ namespace MyVirtualComPort
           {
 
             string x = textBoxIfSend6.Text;
-            x = x.Replace("\n", Environment.NewLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
+            x = x.Replace("\n", myEndOfLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
             if (checkBoxAddNewline6.Checked)
             {
-              serialPort1.Write(x + Environment.NewLine);
+              serialPort1.Write(x + myEndOfLine);
               if (checkBoxSendTwice6.Checked)
               {
                 System.Threading.Thread.Sleep(mysleeptime);
-                serialPort1.Write(x + Environment.NewLine);
+                serialPort1.Write(x + myEndOfLine);
               }
             }
             else
@@ -626,14 +663,14 @@ namespace MyVirtualComPort
           {
 
             string x = textBoxIfSend7.Text;
-            x = x.Replace("\n", Environment.NewLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
+            x = x.Replace("\n", myEndOfLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
             if (checkBoxAddNewline7.Checked)
             {
-              serialPort1.Write(x + Environment.NewLine);
+              serialPort1.Write(x + myEndOfLine);
               if (checkBoxSendTwice7.Checked)
               {
                 System.Threading.Thread.Sleep(mysleeptime);
-                serialPort1.Write(x + Environment.NewLine);
+                serialPort1.Write(x + myEndOfLine);
               }
             }
             else
@@ -654,14 +691,14 @@ namespace MyVirtualComPort
           {
 
             string x = textBoxIfSend8.Text;
-            x = x.Replace("\n", Environment.NewLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
+            x = x.Replace("\n", myEndOfLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
             if (checkBoxAddNewline8.Checked)
             {
-              serialPort1.Write(x + Environment.NewLine);
+              serialPort1.Write(x + myEndOfLine);
               if (checkBoxSendTwice8.Checked)
               {
                 System.Threading.Thread.Sleep(mysleeptime);
-                serialPort1.Write(x + Environment.NewLine);
+                serialPort1.Write(x + myEndOfLine);
               }
             }
             else
@@ -682,14 +719,14 @@ namespace MyVirtualComPort
           {
 
             string x = textBoxIfSend9.Text;
-            x = x.Replace("\n", Environment.NewLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
+            x = x.Replace("\n", myEndOfLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
             if (checkBoxAddNewline9.Checked)
             {
-              serialPort1.Write(x + Environment.NewLine);
+              serialPort1.Write(x + myEndOfLine);
               if (checkBoxSendTwice9.Checked)
               {
                 System.Threading.Thread.Sleep(mysleeptime);
-                serialPort1.Write(x + Environment.NewLine);
+                serialPort1.Write(x + myEndOfLine);
               }
             }
             else
@@ -710,14 +747,14 @@ namespace MyVirtualComPort
           {
 
             string x = textBoxIfSend10.Text;
-            x = x.Replace("\n", Environment.NewLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
+            x = x.Replace("\n", myEndOfLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
             if (checkBoxAddNewline10.Checked)
             {
-              serialPort1.Write(x + Environment.NewLine);
+              serialPort1.Write(x + myEndOfLine);
               if (checkBoxSendTwice10.Checked)
               {
                 System.Threading.Thread.Sleep(mysleeptime);
-                serialPort1.Write(x + Environment.NewLine);
+                serialPort1.Write(x + myEndOfLine);
               }
             }
             else
@@ -736,14 +773,14 @@ namespace MyVirtualComPort
           if (textBoxIfRead11.Text == read)
           {
             string x = textBoxIfSend11.Text;
-            x = x.Replace("\n", Environment.NewLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
+            x = x.Replace("\n", myEndOfLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
             if (checkBoxAddNewline11.Checked)
             {
-              serialPort1.Write(x + Environment.NewLine);
+              serialPort1.Write(x + myEndOfLine);
               if (checkBoxSendTwice11.Checked)
               {
                 System.Threading.Thread.Sleep(mysleeptime);
-                serialPort1.Write(x + Environment.NewLine);
+                serialPort1.Write(x + myEndOfLine);
               }
             }
             else
@@ -760,7 +797,7 @@ namespace MyVirtualComPort
           }
         }
 
-
+  
       }
 
     }
@@ -929,7 +966,7 @@ namespace MyVirtualComPort
 
     private void button12_Click(object sender, EventArgs e)
     {
-      textBoxIfSend1.Text = (Convert.ToInt32(textBoxIfSend1.Text)+ Convert.ToInt32(textBox21.Text)).ToString();
+      textBoxIfSend1.Text = (Convert.ToInt32(textBoxIfSend1.Text) + Convert.ToInt32(textBox21.Text)).ToString();
     }
 
     private void button13_Click(object sender, EventArgs e)
@@ -945,7 +982,7 @@ namespace MyVirtualComPort
     private void button14_Click(object sender, EventArgs e)
     {
       string x = textBox2.Text;
-      //x = x.Replace("\n", Environment.NewLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
+      //x = x.Replace("\n", myEndOfLine);  //so that we can write "\n" withing the string and it will be automatically replaced with newline.
       serialPort1.Write(x + "\n");
     }
 
@@ -1000,6 +1037,64 @@ namespace MyVirtualComPort
     {
       Properties.Settings.Default.name11 = textBox22.Text;
       Properties.Settings.Default.Save();
+    }
+
+    private void buttonTimerOn_Click(object sender, EventArgs e)
+    {
+      timerForDynamicVariables.Enabled = true;
+    }
+
+    private void buttonTimerOff_Click(object sender, EventArgs e)
+    {
+      timerForDynamicVariables.Enabled = false;
+    }
+
+    private void checkBox1_CheckedChanged(object sender, EventArgs e)
+    {
+
+    }
+
+    private void timerForDynamicVariables_Tick(object sender, EventArgs e)
+    {
+      if (checkBox1.Checked)
+      {
+        try
+        {
+          textBoxIfSend5.Text = (Convert.ToInt32(textBoxIfSend5.Text) + Convert.ToInt32(textBox23.Text)).ToString();
+          trackBar3.Value = Convert.ToInt32(textBoxIfSend5.Text);
+        }
+        catch (Exception)
+        {
+
+        }
+      }
+      if (checkBox2.Checked)
+      {
+        try
+        {
+          textBoxIfSend1.Text = (Convert.ToInt32(textBoxIfSend1.Text) + Convert.ToInt32(textBox24.Text)).ToString();
+          trackBar1.Value = Convert.ToInt32(textBoxIfSend1.Text);
+        }
+        catch (Exception)
+        {
+
+        }
+      }
+    }
+
+    private void checkBoxSendTwice11_CheckedChanged(object sender, EventArgs e)
+    {
+      if (checkBoxSendTwice11.Checked)
+      {
+        Properties.Settings.Default.checkBoxSendTwice11 = true;
+      }
+      else
+      {
+        Properties.Settings.Default.checkBoxSendTwice11 = false;
+      }
+      Properties.Settings.Default.Save();
+
+
     }
   }
 }
